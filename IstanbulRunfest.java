@@ -10,6 +10,10 @@ public class IstanbulRunfest {
     }
 
     public static Runner calculateFastestRunner(Runner[] runners) {
+        if (runners.length == 0) {
+            System.out.println("Runners array is empty!");
+            return null;
+        }
         Runner fastestRunner = runners[0];
         for (int i = 1; i < runners.length; i++) {
             if (runners[i].runnerTime < fastestRunner.runnerTime) {
@@ -17,6 +21,29 @@ public class IstanbulRunfest {
             }
         }
         return fastestRunner;
+    }
+
+    public static Runner calculateSecondFastest(Runner[] runners) {
+        if (runners.length == 0) {
+            System.out.println("Runners array is empty!");
+            return null;
+        } else if (runners.length == 1) {
+            System.out.println("There is only one runner!");
+            return null;
+        }
+
+        Runner fastest = runners[0];
+        Runner secondFastest = runners[1];
+        
+        for (int i = 1; i < runners.length; i++) {
+            if (runners[i].runnerTime < fastest.runnerTime) {
+                secondFastest = fastest;
+                fastest = runners[i];
+            } else if (runners[i].runnerTime < secondFastest.runnerTime) {
+                secondFastest = runners[i];
+            }
+        }
+        return secondFastest;
     }
 
     public static void main(String[] args) {
@@ -36,11 +63,15 @@ public class IstanbulRunfest {
             new Runner("Umut", 299),
             new Runner("Seda", 343),
             new Runner("Selcan", 317),
-            new Runner("Hatice", 265)
+            new Runner("Hatice", 265),
         };
         Runner fastestRunner = calculateFastestRunner(runners);
         System.out.println("The fastest runner is " + fastestRunner.runnerName + 
         " with a time of " + fastestRunner.runnerTime + " seconds.");
+
+        Runner secondFastest = calculateSecondFastest(runners);
+        System.out.println("The second fastest runner is " + secondFastest.runnerName + 
+        " with a time of " + secondFastest.runnerTime + " seconds.");
     }
 
     
