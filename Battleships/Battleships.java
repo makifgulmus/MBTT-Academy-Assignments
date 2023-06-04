@@ -16,6 +16,8 @@ private static final int[] SHIP_LENGTHS = {5, 4, 3, 2, 1};
 
 private int [][] board = new int [10][10];
 
+Scanner sc = new Scanner(System.in);
+
 private void placeFleet() {
     Random random = new Random();
     for (int i = 0; i < SHIP_NAMES.length; i++) {
@@ -60,24 +62,28 @@ private void placeShip(int length, int x, int y, boolean horizontal) {
 }
 
 private void play() {
-    Scanner sc = new Scanner(System.in);
+    System.out.println("Welcome to Battleships! There is a fleet of 5 ships hidden on a 10x10 sea. You have 10 shots to sink the entire fleet. Good luck!");
+    debugMode();
     int shots = 0;
     int hits = 0;
     int points = 0;
     List<String> sunkenShips = new ArrayList<>();
     while(hits < 5 && shots < 10) {
         int x,y = 0;
-        System.out.println("Enter x and y coordinates seperated by a comma (1-10): ");
-        try {
-            String input = sc.nextLine();
-            String[] coordinates = input.split(",");
-            x = Integer.parseInt(coordinates[0]) - 1;
-            y = Integer.parseInt(coordinates[1]) - 1;
-        } catch (Exception e) {
-            System.out.println("Invalid input");
-            continue;
-        }
-        
+        System.out.println("Please enter the next square to fire at, seperated by a comma (1-10): ");
+            try {
+                String input = sc.nextLine();
+                String[] coordinates = input.split(",");
+                x = Integer.parseInt(coordinates[0]) - 1;
+                y = Integer.parseInt(coordinates[1]) - 1;
+                if (x < 0 || x > 9 || y < 0 || y > 9) {
+                    System.out.println("Invalid input. Coordinates must be between 1 and 10. Please enter again.");
+                    continue;
+                }
+            } catch (Exception e) {
+                System.out.println("Invalid input format. Input must be in the form of 1,2. Please enter again.");
+                continue;
+            }
         if (board[x][y] > 0) {
             System.out.println("Hit!");
             points += board[x][y];
@@ -115,7 +121,7 @@ private void play() {
             shots++;
         }
     }
-
+    sc.close();
     if (hits == 5) {
         System.out.println("You won! You sunk all the ships! You scored 15 points !");
     } else {
@@ -127,10 +133,34 @@ private void play() {
     }
 }
 
+private void debugMode(){
+    System.out.println("Do you want to enable the Debug Mode (Locations of the ships will be revealed) : (Y/N)");
+    String godModInput = sc.nextLine();
+    while(!godModInput.equalsIgnoreCase("Y") && !godModInput.equalsIgnoreCase("N")){
+        System.out.println("Invalid input. Please enter again.");
+        godModInput = sc.nextLine();
+    }
+    if (godModInput.equalsIgnoreCase("Y")) {
+        System.out.println("Seems like you are a cheater. Here are the locations of the ships:");
+        for (int i = 0; i < SHIP_NAMES.length; i++) {
+            System.out.print(SHIP_NAMES[i] + ": ");
+            for (int j = 0; j < board.length; j++) {
+                for (int k = 0; k < board[j].length; k++) {
+                    if (board[j][k] == SHIP_LENGTHS[i]) {
+                        System.out.print("(" + (j+1) + "," + (k+1) + ") ");
+                    }
+                }
+            }
+            System.out.println();
+        }
+    } else if (godModInput.equalsIgnoreCase("N")){
+        System.out.println("Debug Mode Disabled");
+    }
+}
+
 public static void main(String[] args) {
     Battleships game = new Battleships();
     game.placeFleet();
     game.play();
 }
-
 }
